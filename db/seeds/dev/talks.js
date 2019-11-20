@@ -32,7 +32,7 @@ const createTalk = (knex, talk) => {
             name: speaker.name,
             occupation: speaker.occupation,
             introduction: speaker.introduction,
-            id: speakerId[0]
+            talk_id: speakerId[0]
           })
         )
       });

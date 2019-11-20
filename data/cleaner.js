@@ -1,4 +1,5 @@
 const csv = require("csvtojson");
+const fs = require('fs');
 const csvFilePath = '/Users/polsieira/OneDrive/Documents/Turing/mod-4/projects/byob/data/TEDonly_speakers_final.csv';
 
 csv()
@@ -34,7 +35,13 @@ csv()
     })
     )
   })
-  .then(cleanData => console.log(cleanData));
+  .then(cleanData => JSON.stringify(cleanData))
+  .then(jsonData => fs.writeFile('data/talkData.json', jsonData, (err) => {
+    if (err) throw err;
+    console.log('Data written to file');
+  }))
+
+
 
 
 

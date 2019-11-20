@@ -1,5 +1,5 @@
-
 exports.seed = function (knex) {
+
   return knex('speakers').del()
     .then(() => knex('talks').del())
     .then(() => {

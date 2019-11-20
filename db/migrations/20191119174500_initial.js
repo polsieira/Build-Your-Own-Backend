@@ -4,19 +4,17 @@ exports.up = function (knex) {
     knex.schema.createTable('talks', function (table) {
       table.increments('id').primary();
       table.string('headline');
-      table.string('speaker1_id')
-        .unsigned()
-        .references('speakers.id');
-      table.string('speaker2_id')
-        .unsigned()
-        .references('speakers.id')
-      table.string('speaker3_id')
-        .unsigned()
-        .references('speakers.id');
-      table.string('speaker4_id')
-        .unsigned()
-        .references('speakers.id');
-      table.date('publish_date')
+      table.string('description');
+      table.string('speaker1_id').unsigned()
+      table.foreign('speaker1_id').references('speakers.id');
+      table.string('speaker2_id').unsigned()
+      table.foreign('speaker2_id').references('speakers.id');
+      table.string('speaker3_id').unsigned()
+      table.foreign('speaker3_id').references('speakers.id');
+      table.string('speaker4_id').unsigned()
+      table.foreign('speaker3_id').references('speakers.id');
+      table.integer('views').unsigned();
+      table.date('publish_date');
 
       table.timestamps(true, true);
     }),

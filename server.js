@@ -28,6 +28,18 @@ app.get('/api/v1/talks/:id', (request, response) => {
   response.status(200).json(talk);
 });
 
+app.post('/api/v1/talks', (request, response) => {
+  let id = `${shortid.generate()}`;
+  const { newTalk } = request.body;
+
+  if (!newTalk) { //might add logic to check if data exist
+    return response.sendStatus(422);
+  }
+
+  app.locals.talks.push({ id, ...newTalk });
+  response.status(201).json({ id, ...pet });
+});
+
 app.listen(app.get('port'), () => {
   console.log(`${app.locals.title} is running on http://localhost:${app.get('port')}.`);
 });

@@ -1,6 +1,3 @@
-const environment = process.env.NODE_ENV || 'development';
-const configuration = require('./knexfile')[environment];
-const database = require('knex')(configuration);
 const express = require('express');
 const shortid = require('shortid');
 const app = express();
@@ -13,7 +10,6 @@ app.locals.title = 'TEDTalks Data';
 app.get('/', (request, response) => {
   response.send('Welcome to TEDTalks Data');
 });
-
 
 app.get('/api/v1/talks', (request, response) => {
   const { talks } = app.locals;

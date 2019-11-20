@@ -1,4 +1,5 @@
 
+<<<<<<< HEAD
 exports.up = function (knex) {
   return Promise.all([
     knex.schema.createTable('talks', function (table) {
@@ -39,3 +40,12 @@ exports.down = function (knex) {
     knex.schema.dropTable('speakers')
   ]);
 };
+=======
+exports.up = function(knex) {
+  
+};
+
+exports.down = function(knex) {
+  
+};
+>>>>>>> 857cc82f08704a3f78102a662115dda3c4a6d0fb

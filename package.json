@@ -9,5 +9,18 @@
   },
   "keywords": [],
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/polsieira/Build-Your-Own-Backend.git"
+  },
+  "bugs": {
+    "url": "https://github.com/polsieira/Build-Your-Own-Backend/issues"
+  },
+  "homepage": "https://github.com/polsieira/Build-Your-Own-Backend#readme",
+  "dependencies": {
+    "express": "^4.17.1",
+    "knex": "^0.20.2",
+    "pg": "^7.13.0"
+  }
 }

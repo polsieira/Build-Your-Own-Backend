@@ -2,6 +2,15 @@
 
 This API is a collection of TEDTalk information on different talks and speakers.
 
+Table of contents
+=================
+
+<!--ts-->
+   * [TEDTalks API](#tedtalks-api)
+   * [Table of contents](#table-of-contents)
+   * [Setup](#setup)
+<!--te-->
+
 ## Setup
 
 * Clone down this repo and run `npm install`

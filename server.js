@@ -2,54 +2,61 @@ const express = require('express');
 const shortid = require('shortid');
 const app = express();
 
+const environment = process.env.NODE_ENV || 'development';
+const configuration = require('./knexfile')[environment];
+const database = require('knex')(configuration);
+
 app.set('port', process.env.PORT || 3000);
 app.use(express.json());
 
-app.locals.title = 'TEDTalks Data';
+app.locals.title = 'TEDTalks Data Server';
 
 app.get('/', (request, response) => {
-  response.send('Welcome to TEDTalks Data');
+  response.send(`Welcome to ${app.locals.title}`);
 });
 
 app.get('/api/v1/talks', (request, response) => {
-  const { talks } = app.locals;
+  database('talks').select()
+    .then((talks) => {
+      response.status(200).json(talks);
+    })
+    .catch((error) => {
+      response.status(500).json({ error });
+    });
+});
 
-  response.json({ talks });
+app.get('/api/v1/speakers', (request, response) => {
+  database('speakers').select()
+    .then((speaker) => {
+      response.status(200).json(speakers);
+    })
+    .catch((error) => {
+      response.status(500).json({ error });
+    });
 });
 
 app.get('/api/v1/talks/:id', (request, response) => {
   const { id } = request.params;
-  const talk = app.locals.talks.find(talk => talk.Talk_ID === id);
-  if (!talk) {
-    return response.sendStatus(404);
-  }
-
-  response.status(200).json(talk);
+  database('talks').select()
+    .then((talks) => {
+      const talk = talks.find(talk => talk.id === id)
+      response.status(200).json(talk);
+    })
+    .catch((error) => {
+      response.status(500).json({ error });
+    });
 });
 
-app.post('/api/v1/talks', (request, response) => {
-  let id = `${shortid.generate()}`;
-  const { newTalk } = request.body;
-
-  if (!newTalk) { //might add logic to check if data exist
-    return response.sendStatus(422);
-  }
-
-  app.locals.talks.push({ id, ...newTalk });
-  response.status(201).json({ id, ...pet });
-});
-
-app.delete('/api/v1/talks/:id', (request, response) => {
+app.get('/api/v1/speakers/:id', (request, response) => {
   const { id } = request.params;
-
-  let index = app.locals.talks.findIndex(pet => pet.id === id);
-  if (!app.locals.talks[index]) {
-    return response.sendStatus(404);
-  }
-
-  const deletedTalk = app.locals.pets.splice(index, 1);
-
-  response.status(202).json(deletedTalk);
+  database('speakers').select()
+    .then((speakers) => {
+      const speaker = speakers.find(speaker => speaker.id === id)
+      response.status(200).json(speaker);
+    })
+    .catch((error) => {
+      response.status(500).json({ error });
+    });
 });
 
 app.listen(app.get('port'), () => {

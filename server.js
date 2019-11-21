@@ -1,5 +1,4 @@
 const express = require('express');
-const shortid = require('shortid');
 const app = express();
 
 const environment = process.env.NODE_ENV || 'development';
@@ -27,7 +26,7 @@ app.get('/api/v1/talks', (request, response) => {
 
 app.get('/api/v1/speakers', (request, response) => {
   database('speakers').select()
-    .then((speaker) => {
+    .then((speakers) => {
       response.status(200).json(speakers);
     })
     .catch((error) => {
@@ -39,7 +38,7 @@ app.get('/api/v1/talks/:id', (request, response) => {
   const { id } = request.params;
   database('talks').select()
     .then((talks) => {
-      const talk = talks.find(talk => talk.id === id)
+      const talk = talks.find(talk => talk.id === parseInt(id))
       response.status(200).json(talk);
     })
     .catch((error) => {
@@ -47,11 +46,26 @@ app.get('/api/v1/talks/:id', (request, response) => {
     });
 });
 
-app.get('/api/v1/speakers/:id', (request, response) => {
+app.get('/api/v1/speakers/id/:id', (request, response) => {
   const { id } = request.params;
   database('speakers').select()
     .then((speakers) => {
-      const speaker = speakers.find(speaker => speaker.id === id)
+      const speaker = speakers.find(speaker => speaker.id === parseInt(id))
+      response.status(200).json(speaker);
+    })
+    .catch((error) => {
+      response.status(500).json({ error });
+    });
+});
+
+app.get('/api/v1/speakers/name/:name', (request, response) => {
+  let { name } = request.params;
+  name = name.replace(/-/g, ' ');
+  database('speakers').select()
+    .then((speakers) => {
+      const speaker = speakers.find(speaker => {
+        return speaker.name === name
+      })
       response.status(200).json(speaker);
     })
     .catch((error) => {

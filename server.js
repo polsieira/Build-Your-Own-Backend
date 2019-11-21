@@ -42,6 +42,7 @@ app.get('/api/v1/talks/:id', (request, response) => {
       if (talk.length === 0) {
         response.status(404).json('There is no TEDTalk with that id.');
       }
+      response.status(200).json(talk);
     })
     .catch((error) => {
       response.status(500).json({ error });
@@ -56,9 +57,7 @@ app.get('/api/v1/speakers/id/:id', (request, response) => {
       if (speaker.length === 0) {
         response.sendStatus(418);
       }
-    })
-    .then((speaker) => {
-      response.status(200).json(speaker);
+      esponse.status(200).json(speaker);
     })
     .catch((error) => {
       response.status(500).json({ error });
@@ -74,6 +73,7 @@ app.get('/api/v1/speakers/name/:name', (request, response) => {
       if (speaker.length === 0) {
         response.status(404).json('There is no speaker with that name.');
       }
+      response.status(200).json(speaker);
     })
     .catch((error) => {
       response.status(500).json({ error });

@@ -4,15 +4,7 @@ exports.up = function (knex) {
     knex.schema.createTable('talks', function (table) {
       table.increments('id').primary();
       table.string('headline');
-      table.string('description');
-      table.integer('speaker1_id').unsigned()
-      table.foreign('speaker1_id').references('speakers.id');
-      table.integer('speaker2_id').unsigned()
-      table.foreign('speaker2_id').references('speakers.id');
-      table.integer('speaker3_id').unsigned()
-      table.foreign('speaker3_id').references('speakers.id');
-      table.integer('speaker4_id').unsigned()
-      table.foreign('speaker4_id').references('speakers.id');
+      table.text('description');
       table.integer('views').unsigned();
       table.string('published');
 
@@ -23,7 +15,9 @@ exports.up = function (knex) {
       table.increments('id').primary();
       table.string('name');
       table.string('occupation');
-      table.string('introduction');
+      table.text('introduction');
+      table.integer('talk_id').unsigned();
+      table.foreign('talk_id').references('talks.id')
 
       table.timestamps(true, true);
     })
@@ -33,8 +27,8 @@ exports.up = function (knex) {
 
 exports.down = function (knex) {
   return Promise.all([
-    knex.schema.dropTable('talks'),
-    knex.schema.dropTable('speakers')
+    knex.schema.dropTable('speakers'),
+    knex.schema.dropTable('talks')
   ]);
 };
 

@@ -113,7 +113,32 @@ app.post('/api/v1/speakers', (request, response) => {
     });
 });
 
+app.delete('/api/v1/talks/:id', (request, response) => {
+  const { id } = request.params;
+  database('talks')
+    .where({ id: id })
+    .del()
+    .then(speaker => {
+      response.status(201).json({ id })
+    })
+    .catch(error => {
+      response.status(422).json({ error })
+    });
+});
+
+app.delete('/api/v1/speakers/id/:id', (request, response) => {
+  const { id } = request.params;
+  database('speakers')
+    .where({ id: id })
+    .del()
+    .then(speaker => {
+      response.status(201).json({ id })
+    })
+    .catch(error => {
+      response.status(422).json({ error })
+    });
+});
+
 app.listen(app.get('port'), () => {
   console.log(`${app.locals.title} is running on http://localhost:${app.get('port')}.`);
 });
-

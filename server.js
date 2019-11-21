@@ -40,7 +40,7 @@ app.get('/api/v1/talks/:id', (request, response) => {
     .where({ id: id })
     .then((talk) => {
       if (talk.length === 0) {
-        response.status(402).json('There is no TEDTalk with that id.');
+        response.status(404).json('There is no TEDTalk with that id.');
       }
     })
     .catch((error) => {
@@ -54,7 +54,7 @@ app.get('/api/v1/speakers/id/:id', (request, response) => {
     .where({ id: id })
     .then((speaker) => {
       if (speaker.length === 0) {
-        response.status(402).json('There is no speaker with that id.');
+        response.sendStatus(418);
       }
     })
     .then((speaker) => {
@@ -72,7 +72,7 @@ app.get('/api/v1/speakers/name/:name', (request, response) => {
     .where({ name: name })
     .then((speaker) => {
       if (speaker.length === 0) {
-        response.status(402).json('There is no speaker with that name.');
+        response.status(404).json('There is no speaker with that name.');
       }
     })
     .catch((error) => {

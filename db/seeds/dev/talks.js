@@ -1,4 +1,4 @@
-var talksData = require('../../../data/talkData.json');
+const talksData = require('../../../data/talkData.json');
 
 exports.seed = function (knex) {
 

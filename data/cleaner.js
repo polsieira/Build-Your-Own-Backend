@@ -35,6 +35,10 @@ csv()
     })
     )
   })
+  .then(data => {
+    console.log(data);
+    return data;
+  })
   .then(cleanData => JSON.stringify(cleanData))
   .then(jsonData => fs.writeFile('data/talkData.json', jsonData, (err) => {
     if (err) throw err;

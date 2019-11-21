@@ -9,6 +9,8 @@ This API is a collection of TEDTalk information on different talks and speakers.
    * [TEDTalks API](#tedtalks-api)
    * [Table of contents](#table-of-contents)
    * [Setup](#setup)
+   * [Data Model](#data-model)
+   * [Endpoints](#endpoints)
 <!--te-->
 
 ## Setup

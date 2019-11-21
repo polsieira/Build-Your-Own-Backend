@@ -73,6 +73,46 @@ app.get('/api/v1/speakers/name/:name', (request, response) => {
     });
 });
 
+app.post('/api/v1/talks', (request, response) => {
+  const talk = request.body;
+
+  for (let requiredParameter of ['headline', 'description', 'views', 'published']) {
+    if (!talk[requiredParameter]) {
+      return response
+        .status(422)
+        .send({ error: `Expected format: { headline: <String>, description: <String>, views: <Integer>, published: <String> }. You're missing a "${requiredParameter}" property.` });
+    }
+  }
+
+  database('talks').insert(talk, 'id')
+    .then(talk => {
+      response.status(201).json({ id: talk[0] })
+    })
+    .catch(error => {
+      response.status(500).json({ error });
+    });
+});
+
+app.post('/api/v1/speakers', (request, response) => {
+  const speaker = request.body;
+
+  for (let requiredParameter of ['name', 'occupation', 'introduction', 'talk_id']) {
+    if (!speaker[requiredParameter]) {
+      return response
+        .status(422)
+        .send({ error: `Expected format: { name: <String>, occupation: <String>, introduction: <String>, talk_id: <Integer> }. You're missing a "${requiredParameter}" property.` });
+    }
+  }
+
+  database('speakers').insert(speaker, 'id')
+    .then(speaker => {
+      response.status(201).json({ id: speaker[0] })
+    })
+    .catch(error => {
+      response.status(500).json({ error });
+    });
+});
+
 app.listen(app.get('port'), () => {
   console.log(`${app.locals.title} is running on http://localhost:${app.get('port')}.`);
 });

@@ -41,7 +41,7 @@ A speaker stored on the server has an `id`, `name`, `occupation`, `published`, a
   id: 1,
   name: 'Nicholas Negroponte',
   occupation: 'Tech visionary',
-  introduction: 'The founder of the MIT Media Lab, Nicholas Negroponte pushed the edge of the information revolution as an inventor, thinker and angel investor. He's the driving force behind One Laptop per Child, building computers for children in the developing world.',
+  introduction: 'The founder of the MIT Media Lab, Nicholas Negroponte pushed the edge of the information revolution as an inventor, thinker and angel investor. He\'s the driving force behind One Laptop per Child, building computers for children in the developing world.',
   talk_id: 1006
 }
 ```

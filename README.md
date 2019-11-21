@@ -28,7 +28,7 @@ A talk stored on the server has an `id`, `headline`, `description`, `views`, `pu
 {
   id: 1,
   headline: '10 top time-saving tech tips',
-  descriptions: 'Tech columnist David Pogue shares 10 simple, clever tips for computer, web, smartphone and camera users. And yes, you may know a few of these already -- but there's probably at least one you don't.',
+  descriptions: 'Tech columnist David Pogue shares 10 simple, clever tips for computer, web, smartphone and camera users. And yes, you may know a few of these already -- but there's probably at least one you don\'t.',
   views: 4951909,
   published: '4/26/13'
 }

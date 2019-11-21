@@ -37,9 +37,11 @@ app.get('/api/v1/speakers', (request, response) => {
 app.get('/api/v1/talks/:id', (request, response) => {
   const { id } = request.params;
   database('talks').select()
-    .then((talks) => {
-      const talk = talks.find(talk => talk.id === parseInt(id))
-      response.status(200).json(talk);
+    .where({ id: id })
+    .then((talk) => {
+      if (talk.length === 0) {
+        response.status(402).json('There is no TEDTalk with that id.');
+      }
     })
     .catch((error) => {
       response.status(500).json({ error });
@@ -49,8 +51,13 @@ app.get('/api/v1/talks/:id', (request, response) => {
 app.get('/api/v1/speakers/id/:id', (request, response) => {
   const { id } = request.params;
   database('speakers').select()
-    .then((speakers) => {
-      const speaker = speakers.find(speaker => speaker.id === parseInt(id))
+    .where({ id: id })
+    .then((speaker) => {
+      if (speaker.length === 0) {
+        response.status(402).json('There is no speaker with that id.');
+      }
+    })
+    .then((speaker) => {
       response.status(200).json(speaker);
     })
     .catch((error) => {
@@ -62,11 +69,11 @@ app.get('/api/v1/speakers/name/:name', (request, response) => {
   let { name } = request.params;
   name = name.replace(/-/g, ' ');
   database('speakers').select()
-    .then((speakers) => {
-      const speaker = speakers.find(speaker => {
-        return speaker.name === name
-      })
-      response.status(200).json(speaker);
+    .where({ name: name })
+    .then((speaker) => {
+      if (speaker.length === 0) {
+        response.status(402).json('There is no speaker with that name.');
+      }
     })
     .catch((error) => {
       response.status(500).json({ error });

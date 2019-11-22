@@ -1,58 +1,151 @@
 const express = require('express');
-const shortid = require('shortid');
 const app = express();
+
+const environment = process.env.NODE_ENV || 'development';
+const configuration = require('./knexfile')[environment];
+const database = require('knex')(configuration);
 
 app.set('port', process.env.PORT || 3000);
 app.use(express.json());
 
-app.locals.title = 'TEDTalks Data';
+app.locals.title = 'TEDTalks Data Server';
 
 app.get('/', (request, response) => {
-  response.send('Welcome to TEDTalks Data');
+  response.send(`Welcome to ${app.locals.title}`);
 });
 
 app.get('/api/v1/talks', (request, response) => {
-  const { talks } = app.locals;
+  database('talks').select()
+    .then((talks) => {
+      response.status(200).json(talks);
+    })
+    .catch((error) => {
+      response.status(500).json({ error });
+    });
+});
 
-  response.json({ talks });
+app.get('/api/v1/speakers', (request, response) => {
+  database('speakers').select()
+    .then((speakers) => {
+      response.status(200).json(speakers);
+    })
+    .catch((error) => {
+      response.status(500).json({ error });
+    });
 });
 
 app.get('/api/v1/talks/:id', (request, response) => {
   const { id } = request.params;
-  const talk = app.locals.talks.find(talk => talk.Talk_ID === id);
-  if (!talk) {
-    return response.sendStatus(404);
-  }
+  database('talks').select()
+    .where({ id: id })
+    .then((talk) => {
+      if (talk.length === 0) {
+        response.status(404).json('There is no TEDTalk with that id.');
+      }
+      response.status(200).json(talk);
+    })
+    .catch((error) => {
+      response.status(500).json({ error });
+    });
+});
 
-  response.status(200).json(talk);
+app.get('/api/v1/speakers/id/:id', (request, response) => {
+  const { id } = request.params;
+  database('speakers').select()
+    .where({ id: id })
+    .then((speaker) => {
+      if (speaker.length === 0) {
+        response.sendStatus(418);
+      }
+      esponse.status(200).json(speaker);
+    })
+    .catch((error) => {
+      response.status(500).json({ error });
+    });
+});
+
+app.get('/api/v1/speakers/name/:name', (request, response) => {
+  let { name } = request.params;
+  name = name.replace(/-/g, ' ');
+  database('speakers').select()
+    .where({ name: name })
+    .then((speaker) => {
+      if (speaker.length === 0) {
+        response.status(404).json('There is no speaker with that name.');
+      }
+      response.status(200).json(speaker);
+    })
+    .catch((error) => {
+      response.status(500).json({ error });
+    });
 });
 
 app.post('/api/v1/talks', (request, response) => {
-  let id = `${shortid.generate()}`;
-  const { newTalk } = request.body;
+  const talk = request.body;
 
-  if (!newTalk) { //might add logic to check if data exist
-    return response.sendStatus(422);
+  for (let requiredParameter of ['headline', 'description', 'views', 'published']) {
+    if (!talk[requiredParameter]) {
+      return response
+        .status(422)
+        .send({ error: `Expected format: { headline: <String>, description: <String>, views: <Integer>, published: <String> }. You're missing a "${requiredParameter}" property.` });
+    }
   }
 
-  app.locals.talks.push({ id, ...newTalk });
-  response.status(201).json({ id, ...pet });
+  database('talks').insert(talk, 'id')
+    .then(talk => {
+      response.status(201).json({ id: talk[0] })
+    })
+    .catch(error => {
+      response.status(500).json({ error });
+    });
+});
+
+app.post('/api/v1/speakers', (request, response) => {
+  const speaker = request.body;
+
+  for (let requiredParameter of ['name', 'occupation', 'introduction', 'talk_id']) {
+    if (!speaker[requiredParameter]) {
+      return response
+        .status(422)
+        .send({ error: `Expected format: { name: <String>, occupation: <String>, introduction: <String>, talk_id: <Integer> }. You're missing a "${requiredParameter}" property.` });
+    }
+  }
+
+  database('speakers').insert(speaker, 'id')
+    .then(speaker => {
+      response.status(201).json({ id: speaker[0] })
+    })
+    .catch(error => {
+      response.status(500).json({ error });
+    });
 });
 
 app.delete('/api/v1/talks/:id', (request, response) => {
   const { id } = request.params;
+  database('talks')
+    .where({ id: id })
+    .del()
+    .then(speaker => {
+      response.status(201).json({ id })
+    })
+    .catch(error => {
+      response.status(422).json({ error })
+    });
+});
 
-  let index = app.locals.talks.findIndex(pet => pet.id === id);
-  if (!app.locals.talks[index]) {
-    return response.sendStatus(404);
-  }
-
-  const deletedTalk = app.locals.pets.splice(index, 1);
-
-  response.status(202).json(deletedTalk);
+app.delete('/api/v1/speakers/id/:id', (request, response) => {
+  const { id } = request.params;
+  database('speakers')
+    .where({ id: id })
+    .del()
+    .then(speaker => {
+      response.status(201).json({ id })
+    })
+    .catch(error => {
+      response.status(422).json({ error })
+    });
 });
 
 app.listen(app.get('port'), () => {
   console.log(`${app.locals.title} is running on http://localhost:${app.get('port')}.`);
 });
-
